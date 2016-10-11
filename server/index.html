@@ -40,14 +40,12 @@
         then_my_message = form.value;
     });
 
-    // serverから返ってくる自分のメッセージをどうするか
-    // このままでは書き込んだ自分のメッセージが相手のメッセージとしてチャット欄に表示されてしまう
-    // 
-
     // serverから送られてくるメッセージすべてを受け取る
     socket.on('s2c_message', function(message){
         var parse_message = JSON.parse(message)['message'];
         console.log('server send message : ' + parse_message);
+
+        // 現状では自分が送ったメッセージをもう一度受信してしまう、それを除外するため以下
         if (parse_message !== then_my_message) {
             addAnotherUser(parse_message);
         }
