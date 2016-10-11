@@ -17,17 +17,17 @@ socketio.on('connection', function(socket){
 	console.log('a user connected');
 
 	// message
-	socketio.on('message', function(msg){
-		console.log('chat message');
-		socketio.emit('chat message', msg);
+	socket.on('c2s_message', function(msg){
+		console.log('client message : ' + JSON.parse(msg)['message']);
+		socketio.emit('s2c_message', msg);
 	});
 
 	// disconnect
-	socketio.on('disconnect', function(socket){
+	socket.on('disconnect', function(socket){
 		console.log('disconnect');
 	});
 });
 
 http.listen(PORT, function(){
-	console.log('listening on *:8080');
+	console.log('listening on *:' + PORT);
 });

@@ -5,6 +5,7 @@
   <title>Socket.IO chat</title>
 
   <!-- <link rel="stylesheet" type="text/css" href="css/index.css"/> -->
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
   <script src="/socket.io/socket.io.js"></script>
 
 </head>
@@ -19,7 +20,20 @@
 
     var sendButton = document.getElementById('send_button');
     var form = document.getElementById('m');
-    socket.emit('message', form.value);
+
+    sendButton.addEventListener('click', function(){
+        console.log('button click');
+
+        var json = JSON.stringify({message : form.value});
+        //send message
+        socket.emit('c2s_message', json);
+    });
+
+    //receive message
+    socket.on('s2c_message', function(message){
+        var parse_message = JSON.parse(message);
+        console.log('receive : ' + parse_message['message']);
+    });
 
 </script>
 
