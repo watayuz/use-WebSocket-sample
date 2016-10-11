@@ -5,8 +5,9 @@
   <title>Socket.IO chat</title>
 
   <link rel="stylesheet" type="text/css" href="css/index.css"/>
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
   <script src="/socket.io/socket.io.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 </head>
 <body>
@@ -29,19 +30,27 @@
     var sendButton = document.getElementById('send_button');
     var form = document.getElementById('m');
 
-    sendButton.addEventListener('click', function(){
-        console.log('button click');
+    var then_my_message = "";
 
+    sendButton.addEventListener('click', function(){
         var json = JSON.stringify({message : form.value});
         //send message
         socket.emit('c2s_message', json);
+        addMe(form.value);
+        then_my_message = form.value;
     });
 
-    //receive message
+    // serverから返ってくる自分のメッセージをどうするか
+    // このままでは書き込んだ自分のメッセージが相手のメッセージとしてチャット欄に表示されてしまう
+    // 
+
+    // serverから送られてくるメッセージすべてを受け取る
     socket.on('s2c_message', function(message){
-        var parse_message = JSON.parse(message);
-        addMe(parse_message['message']);
-        addAnotherUser(parse_message['message']);
+        var parse_message = JSON.parse(message)['message'];
+        console.log('server send message : ' + parse_message);
+        if (parse_message !== then_my_message) {
+            addAnotherUser(parse_message);
+        }
     });
 
     function addMe(txt){
@@ -52,7 +61,6 @@
     }
 
     function addAnotherUser(txt){
-
         var element = document.createElement('p');
         element.innerHTML = txt;
         element.className = "left";

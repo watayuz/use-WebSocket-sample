@@ -16,10 +16,15 @@ app.get('/', function(req, res){
 socketio.on('connection', function(socket){
 	console.log('a user connected');
 
-	// message
+	// 
 	socket.on('c2s_message', function(msg){
 		console.log('client message : ' + JSON.parse(msg)['message']);
 		socketio.emit('s2c_message', msg);
+	});
+
+	socket.on('other message', function(msg){
+		console.log('other message');
+		socket.emit('other message', msg);
 	});
 
 	// disconnect
@@ -31,3 +36,6 @@ socketio.on('connection', function(socket){
 http.listen(PORT, function(){
 	console.log('listening on *:' + PORT);
 });
+
+// すべてのメッセージは'c2s_messageに流す'
+// そこから、すべてのClientへ送信する
