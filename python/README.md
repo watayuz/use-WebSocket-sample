@@ -1,5 +1,5 @@
 # python websocket
-use flask_ewebsocketio
+use flask and flask_ewebsocketio
 
 ## installetion
 ```pip install -r requirements.txt```
